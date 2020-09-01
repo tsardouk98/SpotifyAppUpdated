@@ -1,0 +1,123 @@
+<!-- <a href="login.html" class="btn btn-info" role="button">Login With Spotify</a><br> <br> -->
+<h1>Login With Spotify</h1>
+<div ng-app="SpotifyApp" ng-controller="myController" class="container">
+    <form name="myForm">
+        <div class="login-container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" name="email" ng-model="user.username" required class="form-control">
+                        <!-- <div ng-show="myForm.email.$error.email" class="error">Invalid email!</div>
+                        <div ng-show="myForm.email.$error.required &amp;&amp; myForm.email.$touched" class="error">Required!</div> -->
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" name="pass" ng-model="user.password" required class="form-control">
+                        <!-- <div ng-show="myForm.pass.$error.required &amp;&amp; myForm.pass.$touched" class="error">Required!</div> -->
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <button ng-click="authenticate()" ng-disabled="myForm.$invalid" class="btn btn-success pull-right">Login</button>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <!-- <div ng-show="showError" class="alert alert-danger">Wrong credentials!</div> -->
+                    <!-- <div ng-show="showSuccess" class="alert alert-success">Login Successful!</div> -->
+                </div>
+            </div>
+        </div>
+    </form>
+
+</div>
+
+<script>
+    var app = angular.module('myApp', []);
+
+    app.controller('myController', function($scope) {
+
+        $scope.user = {
+            'username': '',
+            'password': ''
+        };
+
+        //----- Users json
+        var validUsers = [{
+            'username': 'chandler@friends.com',
+            'password': '1234'
+        }, {
+            'username': 'ross@friends.com',
+            'password': '1234'
+        }, {
+            'username': 'joey@friends.com',
+            'password': '1234'
+        }, {
+            'username': 'rechal@friends.com',
+            'password': '1234'
+        }];
+
+        $scope.showError = false; // set Error flag
+        $scope.showSuccess = false; // set Success Flag
+
+        //------- Authenticate function
+        $scope.authenticate = function() {
+            var flag = false;
+
+            for (var i in validUsers) { // loop on users array
+                if ($scope.user.username == validUsers[i].username && $scope.user.password == validUsers[i].password) { //checking if username and password match
+                    flag = true;
+                    break;
+                } else {
+                    flag = false;
+                }
+            }
+
+            //-------- set error or success flags
+            if (flag) {
+                $scope.showError = false;
+                $scope.showSuccess = true;
+            } else {
+                $scope.showError = true;
+                $scope.showSuccess = false;
+            }
+
+
+        }
+
+    });
+</script>
+<h1>Search Spotify</h1>
+<h2> Favorite Artist?</h2>
+<p class="lead"> Use search Spotify to find your favorite artists and their recent albums and songs</p>
+<form>
+    <div class="form-group">
+        <input type="text" name="searchStr" [(ngModel)]="searchStr" (keyup)="searchArtist()" class="form-control" placeholder="Search Artist...">
+
+    </div>
+</form>
+<ul class="filter-select">
+    <!--filter searches-->
+
+    <div *ngFor="let res of searchRes">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="search-res well">
+                    <h4><a routerLink="/artist/{{res.id}}">{{res.name}}</a></h4>
+                    <!----artist name-->
+                    <div>
+                        <strong>Genres:</strong>
+                        <span *ngFor="let genre of res.genres"> {{genre}}; </span>
+                        <!----genre name-->
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</ul>
